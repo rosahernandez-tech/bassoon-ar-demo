@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bassoon Engineering — 3D Models</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0d1117;
+  --surface: #161b22;
+  --border:  #30363d;
+  --text:    #e6edf3;
+  --muted:   #8b949e;
+  --accent:  #58a6ff;
+  --accent2: #79c0ff;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+/* ── Header ── */
+header {
+  padding: 28px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+}
+.header-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+header h1 {
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+header p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── AR badge ── */
+.ar-banner {
+  margin: 16px 20px 0;
+  background: rgba(88,166,255,.08);
+  border: 1px solid rgba(88,166,255,.3);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--accent2);
+}
+.ar-banner svg { flex-shrink: 0; }
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  padding: 20px;
+}
+@media (min-width: 480px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Card ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.card:hover, .card:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(88,166,255,.25), 0 8px 28px rgba(0,0,0,.4);
+  outline: none;
+}
+.card-thumb {
+  height: 120px;
+  background: linear-gradient(135deg, #1c2128 0%, #0d1117 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-thumb svg { opacity: .35; }
+.card-body {
+  padding: 14px 16px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.card-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--accent);
+}
+.card-name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.card-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.55;
+  flex: 1;
+}
+.card-btn {
+  margin-top: 12px;
+  padding: 9px 16px;
+  background: rgba(88,166,255,.12);
+  border: 1px solid rgba(88,166,255,.35);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent2);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+/* ── Footer ── */
+footer {
+  padding: 24px 20px;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  line-height: 1.8;
+}
+footer strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Congress Demo &middot; Bassoon Engineering Project</div>
+  <h1>Bassoon Reed<br>3D Model Viewer</h1>
+  <p>Interactive 3D models from laser scans and parametric generation</p>
+
+  <div class="ar-banner">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M5 3H3a2 2 0 0 0-2 2v2"/><path d="M19 3h2a2 2 0 0 1 2 2v2"/>
+      <path d="M5 21H3a2 2 0 0 1-2-2v-2"/><path d="M19 21h2a2 2 0 0 0 2-2v-2"/>
+      <path d="M12 8l-4 2.4V16l4 2.4 4-2.4v-5.6L12 8z"/>
+    </svg>
+    <span><strong>AR supported</strong> — tap a model, then tap the AR button to place it in your room</span>
+  </div>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  <strong>Bassoon Engineering Project</strong><br>
+  Scan with your camera to view 3D models &amp; try augmented reality<br>
+  Best experienced in Chrome (Android) or Safari (iOS 17+)
+</footer>
+
+<script>
+const MODELS = [
+  {
+    id: "bassoon_reed",
+    tag: "Generated model",
+    name: "Bassoon Reed — v5",
+    desc: "Parametric 3D model showing cane blade, tube, brass wire binding, and red thread wrapping. Total length: 56 mm.",
+  },
+  {
+    id: "bassoon_reed_all_scans",
+    tag: "Laser scan overlay",
+    name: "DAVID Scan Overlays",
+    desc: "Generated model overlaid with 5 DAVID SLS-3 laser scans of different cane sections. Color-coded by scan session.",
+  },
+  {
+    id: "scan_shaped_reed",
+    tag: "Laser scan",
+    name: "Scanned Shaped Reed",
+    desc: "Direct DAVID SLS-3 laser scan of a shaped bassoon reed blank. Raw surface geometry as captured.",
+  },
+  {
+    id: "bassoon_reed_point_cloud",
+    tag: "Point cloud",
+    name: "Reed Point Cloud",
+    desc: "Point cloud reconstruction of the reed surface. Each point represents a measurement from the laser scanner.",
+  },
+];
+
+const ICON = `<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.3">
+  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+  <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+</svg>`;
+
+const AR_ICON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+  <path d="M5 3H3a2 2 0 0 0-2 2v2"/><path d="M19 3h2a2 2 0 0 1 2 2v2"/>
+  <path d="M5 21H3a2 2 0 0 1-2-2v-2"/><path d="M19 21h2a2 2 0 0 0 2-2v-2"/>
+</svg>`;
+
+const grid = document.getElementById("grid");
+
+MODELS.forEach(m => {
+  const a = document.createElement("a");
+  a.className = "card";
+  a.href = `model.html?m=${m.id}`;
+  a.innerHTML = `
+    <div class="card-thumb">${ICON}</div>
+    <div class="card-body">
+      <div class="card-tag">${m.tag}</div>
+      <div class="card-name">${m.name}</div>
+      <div class="card-desc">${m.desc}</div>
+      <div class="card-btn">${AR_ICON} View in 3D / AR</div>
+    </div>`;
+  grid.appendChild(a);
+});
+</script>
+
+</body>
+</html>
